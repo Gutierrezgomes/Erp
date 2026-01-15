@@ -1,0 +1,4 @@
+Esse projeto foi criado como parte de um projeto de erp independente o modulo neste repositorio é o modulo financeiro, ele é dividido em três partes: 
+1- A pagina principal sendo ela responsavel por mostrar um resumo de todas as contas sendo elas tanto de credito (Contas a receber) quanto de debito (Contas a pagar).
+2- A pagina de lançamentos é a responsavel por realizar o lançamento de contas no sistema e é possivel filtrar as mesmas entre lançamentos e despesas. 
+3- A ultima pagina desde modulo é a pagina plano de contas que é o responsavel por organizar todas as movimentações financeiras de uma empresa.

@@ -1,2 +1,0 @@
-Esse projeto foi criado como parte de um projeto de erp independente o modulo neste repositorio é o modulo financeiro, ele é dividido em três partes: 
-A pagina principal sendo ela responsavel por mostrar um resumo de todas as 
