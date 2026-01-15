@@ -1,0 +1,118 @@
+/* --- CSS Específico para a Página de Categorias --- */
+
+/* 1. Container Centralizado
+   Diferente de Lançamentos (que usa 100% da tela), 
+   Categorias fica melhor se limitado a uma largura máxima de 800px 
+*/
+.categorias-content-wrapper {
+    max-width: 900px;
+    margin: 0 auto; /* Centraliza na tela */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 2. Cabeçalho da Página Específico */
+.categorias-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.categorias-header h1 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 3. Card/Container da Tabela */
+.categorias-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+/* 4. Tabela de Categorias */
+.table-categorias {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-categorias thead {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.table-categorias th {
+    text-align: left;
+    padding: 16px 24px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 0.05em;
+}
+
+.table-categorias td {
+    padding: 16px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: middle;
+}
+
+/* Efeito Hover na linha */
+.table-categorias tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* 5. Estilo Visual do Nome da Categoria (Tag Style) */
+.cat-name-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cat-icon-placeholder {
+    width: 32px;
+    height: 32px;
+    background-color: #e0f2fe; /* Azul bem clarinho */
+    color: #0284c7; /* Azul forte */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.cat-name-text {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* 6. Botões de Ação (Alinhados à direita) */
+.actions-right {
+    text-align: right;
+}
+
+.btn-icon-action {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-size: 1rem;
+    margin-left: 5px;
+}
+
+.btn-icon-action:hover {
+    background-color: #f1f5f9;
+}
+
+.edit-btn { color: #3b82f6; } /* Azul */
+.delete-btn { color: #ef4444; } /* Vermelho */

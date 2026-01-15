@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lançamentos</title>
+    
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'css/lancamentos.css' %}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-chart-simple"></i>
+            <span>ERP</span>
+            <small>Módulo Financeiro</small>
+        </div>
+        <ul class="menu-list">
+            <li class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                <a href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Página Inicial </a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'lancamentos' %}active{% endif %}">
+                <a href="{% url 'lancamentos' %}"><i class="fa-solid fa-money-bill-transfer"></i> Lançamentos</a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'categorias' %}active{% endif %}">
+                <a href="{% url 'categorias' %}"><i class="fa-solid fa-tags"></i> Plano de Contas</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <h1>Lançamentos</h1>
+            <a href="/admin/financeiro/lancamento/add/" class="btn-primary" style="text-decoration: none;">
+                <i class="fa-solid fa-plus"></i> Novo Lançamento
+            </a>
+        </header>
+
+       <div class="filters-bar">
+    
+    <a href="{% url 'lancamentos' %}" 
+       class="btn-filter {% if not request.GET.tipo %}active{% endif %}" 
+       style="text-decoration: none;">
+       Todos
+    </a>
+
+    <a href="?tipo=receitas" 
+       class="btn-filter {% if request.GET.tipo == 'receitas' %}active{% endif %}" 
+       style="text-decoration: none;">
+       <span style="color: #10b981;">●</span> Receitas
+    </a>
+
+    <a href="?tipo=despesas" 
+       class="btn-filter {% if request.GET.tipo == 'despesas' %}active{% endif %}" 
+       style="text-decoration: none;">
+       <span style="color: #ef4444;">●</span> Despesas
+    </a>
+
+</div>
+
+        <div class="lancamentos-table-container">
+            <div class="table-responsive">
+                <table class="table-lancamentos">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Descrição</th>
+                            <th>Plano de Contas</th>
+                            <th>Vencimento</th>
+                            <th>Pagamento</th> 
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in lancamentos %}
+                        <tr>
+                            <td>
+                                {% if item.status == 'PAGO' %}
+                                    <span class="status-badge status-pago">Pago</span>
+                                {% elif item.status == 'CANCELADO' %}
+                                    <span class="status-badge" style="background:#94a3b8; color:white;">Cancelado</span>
+                                {% else %}
+                                    {% now "Y-m-d" as hoje %} {% if item.data_vencimento|date:"Y-m-d" < hoje and item.tipo == 'DEBITO' %}
+                                        <span class="status-badge" style="background:#fee2e2; color:#ef4444;">Vencido</span>
+                                    {% else %}
+                                        <span class="status-badge status-pendente">Aberto</span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <strong>{{ item.descricao }}</strong>
+                                <br>
+                                <small style="color: #94a3b8;">
+                                    {% if item.origem_modulo %}
+                                        Origem: {{ item.get_origem_modulo_display }}
+                                    {% else %}
+                                        Manual
+                                    {% endif %}
+                                </small>
+                            </td>
+
+                            <td>
+                                {% if item.plano_conta %}
+                                    {{ item.plano_conta.codigo }} - {{ item.plano_conta.nome }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>{{ item.data_vencimento|date:"d/m/Y" }}</td>
+                            <td>{{ item.data_pagamento|date:"d/m/Y"|default:"-" }}</td>
+
+                            <td>
+                                {% if item.tipo == 'CREDITO' %}
+                                    <span class="valor-receita">R$ {{ item.valor|floatformat:2 }}</span>
+                                {% else %}
+                                    <span class="valor-despesa">- R$ {{ item.valor|floatformat:2 }}</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="actions-cell">
+                                <a href="/admin/financeiro/lancamento/{{ item.id }}/change/" class="btn-action action-edit" title="Editar no Admin">
+                                     <i class="fa-solid fa-pen"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px; color: #64748b;">
+                                Nenhum lançamento encontrado.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

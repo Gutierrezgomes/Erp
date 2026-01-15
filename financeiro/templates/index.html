@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP - Dashboard</title>
+    
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-chart-simple"></i>
+            <span>ERP</span>
+            <small>Módulo Financeiro</small>
+        </div>
+        <ul class="menu-list">
+            <li class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                <a href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Página Inicial </a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'lancamentos' %}active{% endif %}">
+                <a href="{% url 'lancamentos' %}"><i class="fa-solid fa-money-bill-transfer"></i> Lançamentos</a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'categorias' %}active{% endif %}">
+                <a href="{% url 'categorias' %}"><i class="fa-solid fa-tags"></i> Plano de Contas</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        
+        <section class="cards-container">
+            
+            <div class="card">
+                <div class="card-info">
+                    <p>Saldo Atual</p>
+                    <h2 class="{% if saldo < 0 %}text-red{% else %}text-green{% endif %}">
+                        R$ {{ saldo|floatformat:2 }}
+                    </h2>
+                </div>
+                <div class="card-icon icon-blue">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-info">
+                    <p>Receitas (Mês)</p>
+                    <h2 class="text-green">R$ {{ receitas_mes|floatformat:2 }}</h2>
+                </div>
+                <div class="card-icon icon-green">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-info">
+                    <p>Despesas (Mês)</p>
+                    <h2 class="text-red">R$ {{ despesas_mes|floatformat:2 }}</h2>
+                </div>
+                <div class="card-icon icon-red">
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-info">
+                    <p>Contas Vencidas</p>
+                    <h2 class="{% if vencidas > 0 %}text-red{% else %}text-orange{% endif %}">
+                        {{ vencidas }}
+                    </h2>
+                </div>
+                <div class="card-icon icon-orange">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-section">
+            <div class="section-header">
+                <h3><i class="fa-solid fa-list"></i> Últimos Lançamentos</h3>
+                <a href="{% url 'lancamentos' %}" style="font-size: 0.8rem; color: #3b82f6; text-decoration: none;">Ver todos</a>
+            </div>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Descrição</th>
+                            <th>Plano de Contas</th>
+                            <th>Vencimento</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in lancamentos %}
+                        <tr>
+                            <td>
+                                {% if item.status == 'PAGO' %}
+                                    <span class="badge bg-pago">PAGO</span>
+                                {% elif item.status == 'CANCELADO' %}
+                                    <span class="badge" style="background-color: #cbd5e1; color: #475569;">CANCELADO</span>
+                                {% else %}
+                                    {% if item.data_vencimento < hoje and item.tipo == 'DEBITO' %}
+                                        <span class="badge" style="background-color: #fee2e2; color: #ef4444;">VENCIDO</span>
+                                    {% else %}
+                                        <span class="badge bg-pendente">ABERTO</span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            
+                            <td>
+                                <strong>{{ item.descricao }}</strong>
+                            </td>
+                            
+                            <td>
+                                {{ item.plano_conta.nome|default:"-" }}
+                            </td>
+                            
+                            <td>
+                                {{ item.data_vencimento|date:"d/m/Y" }}
+                            </td>
+                            
+                            <td>
+                                {% if item.tipo == 'CREDITO' %}
+                                    <span class="text-green" style="font-weight: bold;">+ R$ {{ item.valor|floatformat:2 }}</span>
+                                {% else %}
+                                    <span class="text-red" style="font-weight: bold;">- R$ {{ item.valor|floatformat:2 }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 20px; color: #64748b;">
+                                Nenhum lançamento recente.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>
